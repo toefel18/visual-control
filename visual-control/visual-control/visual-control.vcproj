@@ -18,6 +18,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -54,7 +55,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib oleaut32.lib imm32.lib winmm.lib winspool.lib ws2_32.lib ole32.lib user32.lib advapi32.lib qtmain.lib QtCore.lib QtGui.lib QtXml.lib QtOpenGL.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib oleaut32.lib imm32.lib winmm.lib winspool.lib cv210.lib cxcore210.lib highgui210.lib qtmain.lib QtCore.lib QtGui.lib QtXml.lib QtOpenGL.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="false"
@@ -123,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib oleaut32.lib imm32.lib winmm.lib winspool.lib ws2_32.lib ole32.lib user32.lib advapi32.lib qtmaind.lib QtCored.lib QtGuid.lib QtXmld.lib QtOpenGLd.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib oleaut32.lib imm32.lib winmm.lib winspool.lib cv210d.lib cxcore210d.lib highgui210d.lib qtmaind.lib QtCored.lib QtGuid.lib QtXmld.lib QtOpenGLd.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="true"
@@ -300,6 +301,50 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="cognition"
+			>
+			<File
+				RelativePath=".\cognition\controller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cognition\framecapture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\cognition\framecapture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cognition\framereceiver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cognition\recognizer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\cognition\recognizer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cognition\util.h"
+				>
+			</File>
+			<Filter
+				Name="recognizers"
+				>
+				<File
+					RelativePath=".\cognition\facerecognizer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\cognition\facerecognizer.h"
+					>
 				</File>
 			</Filter>
 		</Filter>
