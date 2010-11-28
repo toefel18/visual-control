@@ -3,8 +3,9 @@
 
 namespace cognition
 {
-	FaceRecognizer::FaceRecognizer(const std::string& name)
-		:Recognizer(name)
+	FaceRecognizer::FaceRecognizer(const std::string& name, 
+			shared_ptr<FrameCapture> captureDevice)
+		:Recognizer(name, captureDevice)
 	{
 	}
 
@@ -28,18 +29,10 @@ namespace cognition
 		currentFrame = nextFrame;
 	}
 
-	void FaceRecognizer::threadStart()
+	void FaceRecognizer::processFrame()
 	{
-		keepProcessing = true;
+		//do face detection, store result in rect
 
-		while(keepProcessing)
-		{
-			//processing work!
-		}
-	}
 
-	void FaceRecognizer::requestTreadStop()
-	{
-		keepProcessing = false;
 	}
 }

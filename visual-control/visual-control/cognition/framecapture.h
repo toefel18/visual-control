@@ -25,6 +25,8 @@ namespace cognition
 		FrameCapture(shared_ptr<CaptureDevice> existingCaptureDevice, float framerate = 24.0f);
 		~FrameCapture();
 
+		shared_ptr<CaptureDevice> getCaptureDevice() { return captureDevice; }
+
 		bool addFrameReceiver(FrameReceiver *receiver);
 		void removeFrameReceiver(FrameReceiver *receiver);
 		

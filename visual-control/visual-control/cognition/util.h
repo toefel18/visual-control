@@ -46,12 +46,12 @@ namespace cognition
 
 	protected:
 
-		//makes p1 the bottom-left and and p2 top-right point
+		//makes p1 the top-left and and p2 bottom-right point
 		void configurePointOrientation()
 		{
 			if(p1.x > p2.x)
 				std::swap(p1.x, p2.x);
-			if(p1.y > p2.y)
+			if(p2.y > p1.y)
 				std::swap(p1.y, p2.y);
 		}
 		struct Point p1, p2;
