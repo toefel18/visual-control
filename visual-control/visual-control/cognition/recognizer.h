@@ -2,35 +2,50 @@
 #define RECOGNIZER_H
 #include <string>
 #include <set>
-#include <boost/shared_ptr.hpp>
+#include <vector>
+#include <cv.h>
 
-#include "framecapture.h"
+//#include <boost/shared_ptr.hpp>
+#include <boost/thread/mutex.hpp>
 #include "framereceiver.h"
-#include "util.h"
 
 namespace cognition
 {
 	class Controller;
+	class FrameCapture;
 
-	using boost::shared_ptr;
-
+	// Base class for recognizers
+	// specialize this class and implement processFrame to create a recognizer
+	// 
+	// @author Christophe hesters
 	class Recognizer : public FrameReceiver
 	{
 	public:
-		Recognizer(const std::string& name, shared_ptr<FrameCapture> captureDevice = shared_ptr<FrameCapture>());
+		
+		typedef std::vector<cv::Rect> RectVector;
+		typedef RectVector::iterator RectVectorItr;
+
+		//typedef boost::shared_ptr<FrameCapture> FrameCapturePtr;
+		typedef FrameCapture* FrameCapturePtr;
+
+		//typedef boost::shared_ptr<Controller> ControllerPtr;
+		typedef Controller* ControllerPtr;
+
+		Recognizer(const std::string& name, FrameCapturePtr captureDevice =0);
 		virtual ~Recognizer(void);
 
 		//recognizers can be given a name for convenience
+		//names should not change during program execution
 		std::string getName() const { return name; }
 		
 		//the rect where the object is last detected!
-		Rect getArea() const { return lastDetect;}
-
-		//convert to smart pointers..
+		RectVector getAreas();
+		
+		//create mutex, now contrllers cannot be added when thread is running!
 		//methods for controllers that get notifications about state changes
-		bool addController(Controller* controller);
-		void removeController(Controller* controller);
-		void notifyControllers();
+		bool addController(ControllerPtr controller);
+		void removeController(ControllerPtr controller);
+		unsigned getControllerCount(){return controllers.size();}
 
 		//threadstart method if this threading facility is used. 
 		//do not call this method from a normal thread, it will be trapped in a processing loop!
@@ -39,20 +54,47 @@ namespace cognition
 		//sets a flag that causes the thread loop to stop, thread can be joined afterwards
 		void requestTreadStop();
 
-		//this will be called by the internal thread loop
+		//should only update next frame, taking concurrency into account
+		//subclasses who want different behaviour can re-implement this!
+		virtual void receiveFrame(const cv::Mat &frame);
+
+		//this will be called by the internal thread loop, if used!
 		virtual void processFrame() = 0;
 
 	protected:
 		std::string name;
-		shared_ptr<FrameCapture> captureDevice; 
-		cognition::Rect lastDetect;
 
 		bool keepProcessing;
 
-		typedef std::set<Controller*> ControllerSet;
+		//create mutex for this
+		//
+		typedef std::set< ControllerPtr > ControllerSet;
 		typedef ControllerSet::iterator ControllerSetItr;
-
+	
 		ControllerSet controllers;
+		boost::mutex controllersLock;
+
+		//cv::Mat currentFrame;
+		cv::Mat nextFrame;
+		boost::mutex frameLoadLock;
+
+		//copies nextFrame to currentFrame, taking concurrency into account
+		cv::Mat getMostRecentFrame();
+
+		//notify all attached controllers about updated areas
+		void notifyControllers();
+
+		//update the internal areas
+		void setAreas(const RectVector &areas);
+
+	private:
+		//derived types should no be able to mess with this!
+		//lock used for area variable which can be read/written concurrently
+		boost::mutex areaLock;
+		
+		//should be private for correct copy and locking behaviour 
+		//the areas where the classifier detected objects
+		RectVector areas;
 	};
 }
 

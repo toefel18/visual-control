@@ -4,38 +4,64 @@
 #include "framereceiver.h"
 
 //OpenCV video capture device
+#include <cv.h>
 #include <highgui.h>
-
-//for shared pointer
 #include <boost/shared_ptr.hpp>
-
+#include <boost/thread/mutex.hpp>
 #include <set>
 
 namespace cognition
 {
-	using boost::shared_ptr;
 
-
+	// Captures frames from a capture device (cv::VideoCapture) on a certain framerate
+	// and sends the frames to all attached frame receivers
+	//
+	// @author Christophe hesters
 	class FrameCapture
 	{
 		typedef cv::VideoCapture CaptureDevice;
+		//typedef boost::shared_ptr<CaptureDevice> CaptureDevicePtr;
+		typedef CaptureDevice* CaptureDevicePtr;
 
 	public:
+
+		//typedef boost::shared_ptr<FrameReceiver> FrameReceiverPtr;
+		typedef FrameReceiver* FrameReceiverPtr;
+
 		FrameCapture(float framerate = 24.0f);
-		FrameCapture(shared_ptr<CaptureDevice> existingCaptureDevice, float framerate = 24.0f);
+		FrameCapture(CaptureDevicePtr existingCaptureDevice, float framerate = 24.0f);
 		~FrameCapture();
 
-		shared_ptr<CaptureDevice> getCaptureDevice() { return captureDevice; }
+		CaptureDevicePtr getCaptureDevice() { return captureDevice; }
 
-		bool addFrameReceiver(FrameReceiver *receiver);
-		void removeFrameReceiver(FrameReceiver *receiver);
+		//the user might want to manage the thread himself, if not pass true!
+		void startCapturing(bool createNewThread = false);
+		void stopCapturing();
+
+		bool addFrameReceiver(FrameReceiverPtr receiver);
+		void removeFrameReceiver(FrameReceiverPtr receiver);
 		
-		float getFramerate(){return framerate;}
-		void setFramerate(float framerate){this->framerate = framerate;}
+		//returns frames per second
+		float getFramerate(){return framerateWaitMs * 1000.0f;}
+
+		//input should be frames per sec
+		void setFramerate(float framerate){
+			this->framerateWaitMs = static_cast<unsigned long>(1000.0f / framerate);
+		}
 	protected:
-		shared_ptr<CaptureDevice> captureDevice;
-		float framerate;
-		std::set<FrameReceiver *> receivers;
+		CaptureDevicePtr captureDevice;
+		unsigned long framerateWaitMs;
+		bool keepCapturing;
+
+		typedef std::set<FrameReceiverPtr > ReceiverSet;
+		typedef ReceiverSet::iterator ReceiverSetItr;
+
+		ReceiverSet receivers;
+		boost::mutex receiversLock;
+
+		void notifyReceivers(cv::Mat &frame);
+
+		void captureLoop();
 	};
 }
 #endif //FRAMECAPTURE_H
