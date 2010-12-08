@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "visual-control", "visual-control\visual-control.vcproj", "{FFC20291-C9BC-43DA-903D-9469C61999B1}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "visual-control", "visual-control\visual-control.vcxproj", "{FFC20291-C9BC-43DA-903D-9469C61999B1}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -20,5 +20,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		QtVersion = 4.7.1
 	EndGlobalSection
 EndGlobal

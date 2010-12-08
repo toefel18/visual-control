@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{39a18f2b-352b-4dc4-ad30-8f64898847f6}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{b05ed707-502d-4644-83d7-3f1bc3fba1b1}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="cognition">
+      <UniqueIdentifier>{cc40cb8b-297e-4d83-befc-439e37d1a435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cognition\recognizers">
+      <UniqueIdentifier>{e65c84aa-b526-4f0c-867c-c35cce2560db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{eed8ad00-8283-4e48-a4c5-3abd9f1b7a3b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_visualcontrol.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_visualcontrol.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_webcamwidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_visualcontrol.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_webcamwidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="cognition\framecapture.cpp">
+      <Filter>cognition</Filter>
+    </ClCompile>
+    <ClCompile Include="cognition\recognizer.cpp">
+      <Filter>cognition</Filter>
+    </ClCompile>
+    <ClCompile Include="cognition\facerecognizer.cpp">
+      <Filter>cognition\recognizers</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\visualcontrol.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\webcamwidget.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cognition\controller.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\framecapture.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\framereceiver.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\recognizer.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\util.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\facerecognizer.h">
+      <Filter>cognition\recognizers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="visualcontrol.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="gui\visualcontrol.h">
+      <Filter>gui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="gui\webcamwidget.h">
+      <Filter>gui</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
