@@ -34,8 +34,7 @@ namespace cognition
 
 		CaptureDevicePtr getCaptureDevice() { return captureDevice; }
 
-		//the user might want to manage the thread himself, if not pass true!
-		void startCapturing(bool createNewThread = false);
+		void startCapturing();
 		void stopCapturing();
 
 		bool addFrameReceiver(FrameReceiverPtr receiver);

@@ -36,11 +36,11 @@
     <Filter Include="cognition">
       <UniqueIdentifier>{cc40cb8b-297e-4d83-befc-439e37d1a435}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cognition\recognizers">
-      <UniqueIdentifier>{e65c84aa-b526-4f0c-867c-c35cce2560db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gui">
       <UniqueIdentifier>{eed8ad00-8283-4e48-a4c5-3abd9f1b7a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cognition\detector">
+      <UniqueIdentifier>{e65c84aa-b526-4f0c-867c-c35cce2560db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,17 +65,17 @@
     <ClCompile Include="cognition\framecapture.cpp">
       <Filter>cognition</Filter>
     </ClCompile>
-    <ClCompile Include="cognition\recognizer.cpp">
-      <Filter>cognition</Filter>
-    </ClCompile>
-    <ClCompile Include="cognition\facerecognizer.cpp">
-      <Filter>cognition\recognizers</Filter>
-    </ClCompile>
     <ClCompile Include="gui\visualcontrol.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gui\webcamwidget.cpp">
       <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="cognition\detector.cpp">
+      <Filter>cognition</Filter>
+    </ClCompile>
+    <ClCompile Include="cognition\detector\facedetector.cpp">
+      <Filter>cognition\detector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,14 +88,14 @@
     <ClInclude Include="cognition\framereceiver.h">
       <Filter>cognition</Filter>
     </ClInclude>
-    <ClInclude Include="cognition\recognizer.h">
-      <Filter>cognition</Filter>
-    </ClInclude>
     <ClInclude Include="cognition\util.h">
       <Filter>cognition</Filter>
     </ClInclude>
-    <ClInclude Include="cognition\facerecognizer.h">
-      <Filter>cognition\recognizers</Filter>
+    <ClInclude Include="cognition\detector.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\detector\facedetector.h">
+      <Filter>cognition\detector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

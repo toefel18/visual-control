@@ -1,33 +1,33 @@
-#include "facerecognizer.h"
+#include "facedetector.h"
 #include <boost/thread/locks.hpp>
 #include <algorithm>
 #include <string>
 
 namespace cognition
 {
-	FaceRecognizer::FaceRecognizer(const std::string& faceCascadePath,
+	FaceDetector::FaceDetector(const std::string& faceCascadePath,
 		FrameCapture* captureDevice,
 		bool optimalSubregionDetect,
 		double roiScaleFactor,
 		const std::string& name)
-		:Recognizer(name, captureDevice), 
+		:Detector(name, captureDevice), 
 		 roiScaleFactor(roiScaleFactor), 
 		 optimalSubregionDetect(optimalSubregionDetect)
 	{
 		faceClassifier.load(faceCascadePath);
 	}
 
-	FaceRecognizer::~FaceRecognizer(void)
+	FaceDetector::~FaceDetector(void)
 	{
 	}
 
-	void FaceRecognizer::processFrame()
+	void FaceDetector::processFrame()
 	{
 		detectFaces();
 	}
 
 	
-	void FaceRecognizer::detectFaces()
+	void FaceDetector::detectFaces()
 	{
 		if(faceClassifier.empty()) return;
 
@@ -72,7 +72,7 @@ namespace cognition
 	}
 
 	//more optimal face detection on smaller regions!
-	void FaceRecognizer::detectFacesInROI(RectVector &lastRects, cv::Mat &frame)
+	void FaceDetector::detectFacesInROI(RectVector &lastRects, cv::Mat &frame)
 	{
 		RectVector newRects;
 
@@ -89,13 +89,13 @@ namespace cognition
 				continue;
 
 			//openCV detects a rect, so only the width is sufficent
-			int adjustFactor = std::max((static_cast<int>(i->width * roiScaleFactor) - i->width) / 2, 10);
+			int adjustFactor = std::max((static_cast<int>(i->width * roiScaleFactor) - i->width) / 2, 35);
 
 			//set the region of interest to the previous frame
 			cv::Mat roiFrame = frame(*i);
 
 			//make the frame bigger, but do not exceed boundaries!
-			roiFrame.adjustROI(adjustFactor*1.15, adjustFactor*1.15, adjustFactor, adjustFactor);
+			roiFrame.adjustROI(adjustFactor*1.10, adjustFactor*1.10, adjustFactor, adjustFactor);
 
 			//detect on smaller frame
 			runDetect(roiFrame, tempRects);
@@ -118,14 +118,14 @@ namespace cognition
 	}
 
 	//inline function to centralize the parameters!
-	inline void FaceRecognizer::runDetect(cv::Mat &frame, RectVector &results)
+	inline void FaceDetector::runDetect(cv::Mat &frame, RectVector &results)
 	{
 		faceClassifier.detectMultiScale(frame, /*the frame, input frame for detection*/
 			results, /*the the result vector, the output*/
 			1.15,  /*the the scale factor, default 1.1*/
 			2,     /*the minNeighbors, default: 3 */
 			cv::CascadeClassifier::DO_CANNY_PRUNING, /*flags*/
-			cv::Size(40, 40) /*min rect check size, the minimum!*/
+			cv::Size(45, 45) /*min rect check size, the minimum!*/
 			);
 	}
 }

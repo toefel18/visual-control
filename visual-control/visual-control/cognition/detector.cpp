@@ -1,4 +1,4 @@
-#include "recognizer.h"
+#include "detector.h"
 #include "controller.h"
 #include <boost/thread/locks.hpp>
 #include <algorithm>
@@ -7,7 +7,7 @@
 
 namespace cognition
 {
-	Recognizer::Recognizer(const std::string& name, FrameCapturePtr captureDevice)
+	Detector::Detector(const std::string& name, FrameCapturePtr captureDevice)
 		:name(name)
 	{
 		//this can be dangerous, if capture device is the only one that holds a shared_ptr
@@ -16,18 +16,18 @@ namespace cognition
 			captureDevice->addFrameReceiver(this);
 	}
 
-	Recognizer::~Recognizer(void)
+	Detector::~Detector(void)
 	{
 	}
 
 
-	bool Recognizer::addController(ControllerPtr controller)
+	bool Detector::addController(ControllerPtr controller)
 	{
 		boost::lock_guard<boost::mutex>(this->controllersLock);
 		return controllers.insert(controller).second;
 	}
 
-	void Recognizer::removeController(ControllerPtr controller)
+	void Detector::removeController(ControllerPtr controller)
 	{
 		boost::lock_guard<boost::mutex>(this->controllersLock);
 
@@ -43,7 +43,7 @@ namespace cognition
 		//}
 	}
 
-	void Recognizer::notifyControllers()
+	void Detector::notifyControllers()
 	{
 		boost::lock_guard<boost::mutex>(this->controllersLock);
 
@@ -51,7 +51,7 @@ namespace cognition
 			(*i)->stateChanged(this);
 	}
 
-	void Recognizer::threadStart()
+	void Detector::threadStart()
 	{
 		keepProcessing = true;
 
@@ -65,12 +65,12 @@ namespace cognition
 		}
 	}
 
-	void Recognizer::requestTreadStop()
+	void Detector::requestTreadStop()
 	{
 		keepProcessing = false;
 	}
 
-	Recognizer::RectVector Recognizer::getAreas() 
+	Detector::RectVector Detector::getAreas() 
 	{ 
 		boost::lock_guard<boost::mutex>(this->areaLock);
 		//the scope is not left until return statement is completed
@@ -78,7 +78,7 @@ namespace cognition
 	}
 
 	//should usually be called only from the inside, by one 1 thread!
-	void Recognizer::setAreas(const Recognizer::RectVector &newAreas)
+	void Detector::setAreas(const Detector::RectVector &newAreas)
 	{
 		if( areas.size() == newAreas.size() &&
 			std::equal(newAreas.begin(), newAreas.end(), areas.begin()))
@@ -95,7 +95,7 @@ namespace cognition
 		notifyControllers();
 	}
 
-	void Recognizer::receiveFrame(const cv::Mat &frame)
+	void Detector::receiveFrame(const cv::Mat &frame)
 	{
 		//locks on entry, destructor unlocks!
 		boost::lock_guard<boost::mutex>(this->frameLoadLock);
@@ -104,7 +104,7 @@ namespace cognition
 		nextFrame = frame;
 	}
 
-	cv::Mat Recognizer::getMostRecentFrame()
+	cv::Mat Detector::getMostRecentFrame()
 	{
 		boost::lock_guard<boost::mutex>(this->frameLoadLock);
 

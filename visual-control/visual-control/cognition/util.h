@@ -9,94 +9,94 @@
 #include "framereceiver.h"
 
 #include <boost/enable_shared_from_this.hpp>
-#include "recognizer.h"
+#include "detector.h"
 #include "controller.h"
 
 namespace cognition
 {
 
-	// Controller forwarder for types that do not work or are
-	// not able to work with shared_ptrs
-	// forwards stateChanges from recognizer to T
-	//  
-	// @note unused, since the framework does not use shared pointers for now
-	// @author Christophe Hesters
-	template<typename T>
-	class ControllerForwarder : public Controller, public boost::enable_shared_from_this<ControllerForwarder<T> >
-	{
-	public:
-		typedef boost::shared_ptr< cognition::Recognizer > RecognizerPtr;
+	//// Controller forwarder for types that do not work or are
+	//// not able to work with shared_ptrs
+	//// forwards stateChanges from detector to T
+	////  
+	//// @note unused, since the framework does not use shared pointers for now
+	//// @author Christophe Hesters
+	//template<typename T>
+	//class ControllerForwarder : public Controller, public boost::enable_shared_from_this<ControllerForwarder<T> >
+	//{
+	//public:
+	//	typedef boost::shared_ptr< cognition::Detector > DetectorPtr;
 
-		
-		ControllerForwarder(T *destination,
-			RecognizerPtr recognizer, 
-			bool autoRegister = false)
-			:destination(destination)//, recognizer(recognizer)
-		{
-			if(autoRegister && recognizer != 0)
-				recognizer->addController(shared_from_this());
-		}
+	//	
+	//	ControllerForwarder(T *destination,
+	//		DetectorPtr recognizer, 
+	//		bool autoRegister = false)
+	//		:destination(destination)//, recognizer(recognizer)
+	//	{
+	//		if(autoRegister && recognizer != 0)
+	//			recognizer->addController(shared_from_this());
+	//	}
 
-		~ControllerForwarder(){
-			//do not unregister here, it will call  the destructor again!
-		}
+	//	~ControllerForwarder(){
+	//		//do not unregister here, it will call  the destructor again!
+	//	}
 
-		//signal that the destination does not want to receive events anymore
-		void unregister(){
-			if(RecognizerPtr r = recognizer.lock())
-				r->removeController(shared_from_this());
-		}
+	//	//signal that the destination does not want to receive events anymore
+	//	void unregister(){
+	//		if(DetectorPtr r = recognizer.lock())
+	//			r->removeController(shared_from_this());
+	//	}
 
-		void stateChanged(Recognizer *recognizer){
-			destination->stateChanged(recognizer);
-		}
+	//	void stateChanged(Detector *recognizer){
+	//		destination->stateChanged(recognizer);
+	//	}
 
-	private:
-		T *destination;
-		boost::weak_ptr<Recognizer> recognizer;
-	};
+	//private:
+	//	T *destination;
+	//	boost::weak_ptr<Detector> recognizer;
+	//};
 
-	// Frame forwarder for types that do not work with shared_ptrs
-	//  This class should be stored inside a shared ptr!
-	//  forwards frames from existingCaptureDevice to T
-	// @note Unused since the framework does not use shared_ptr anymore
-	template<typename T>
-	class FrameForwarder : public FrameReceiver, public boost::enable_shared_from_this<FrameForwarder<T> >
-	{
-	public:
-		typedef boost::shared_ptr<FrameCapture> FrameCapturePtr;
+	//// Frame forwarder for types that do not work with shared_ptrs
+	////  This class should be stored inside a shared ptr!
+	////  forwards frames from existingCaptureDevice to T
+	//// @note Unused since the framework does not use shared_ptr anymore
+	//template<typename T>
+	//class FrameForwarder : public FrameReceiver, public boost::enable_shared_from_this<FrameForwarder<T> >
+	//{
+	//public:
+	//	typedef boost::shared_ptr<FrameCapture> FrameCapturePtr;
 
-		FrameForwarder(T *destination,
-			FrameCapturePtr existingCaptureDevice,
-			bool autoRegister = false)
-			:destination(destination), captureDevice(existingCaptureDevice)
-		{
-			if(autoRegister)
-				if(FrameCapturePtr capDevice = captureDevice.lock())
-					capDevice->addFrameReceiver(shared_from_this());
-		}
+	//	FrameForwarder(T *destination,
+	//		FrameCapturePtr existingCaptureDevice,
+	//		bool autoRegister = false)
+	//		:destination(destination), captureDevice(existingCaptureDevice)
+	//	{
+	//		if(autoRegister)
+	//			if(FrameCapturePtr capDevice = captureDevice.lock())
+	//				capDevice->addFrameReceiver(shared_from_this());
+	//	}
 
-		~FrameForwarder()
-		{
-			//do not unregister here, it will call the destructor again
-			//if(FrameCapturePtr capDevice = captureDevice.lock())
-			//	capDevice->removeFrameReceiver(shared_ptr<FrameReceiver>(this));
-		}
+	//	~FrameForwarder()
+	//	{
+	//		//do not unregister here, it will call the destructor again
+	//		//if(FrameCapturePtr capDevice = captureDevice.lock())
+	//		//	capDevice->removeFrameReceiver(shared_ptr<FrameReceiver>(this));
+	//	}
 
-		//remove from the capture devices
-		void unregister(){
-			if(FrameCapturePtr capDevice = captureDevice.lock())
-				capDevice->removeFrameReceiver(shared_from_this());
-		}
+	//	//remove from the capture devices
+	//	void unregister(){
+	//		if(FrameCapturePtr capDevice = captureDevice.lock())
+	//			capDevice->removeFrameReceiver(shared_from_this());
+	//	}
 
-		virtual void receiveFrame(const cv::Mat &frame){
-			destination->receiveFrame(frame);
-		}
+	//	virtual void receiveFrame(const cv::Mat &frame){
+	//		destination->receiveFrame(frame);
+	//	}
 
-	private:
-		T *destination;
-		boost::weak_ptr<FrameCapture> captureDevice;
-	};
+	//private:
+	//	T *destination;
+	//	boost::weak_ptr<FrameCapture> captureDevice;
+	//};
 
 	//struct Point {
 	//	float x, y;

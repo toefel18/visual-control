@@ -6,7 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 #include "cognition/framecapture.h"
-#include "cognition/faceRecognizer.h"
+#include "cognition/detector/facedetector.h"
 #include "cognition/util.h"
 
 namespace gui
@@ -29,12 +29,12 @@ namespace gui
 		WebcamWidget *webcamWidget;
 
 		boost::thread frameCaptureThread;
-		boost::thread faceRecognizerThread;
+		boost::thread faceDetectorThread;
 		
 		//auto_ptr would suffice here too, for our purposes! 
 		boost::shared_ptr<cv::VideoCapture> videoCapture;
 		boost::shared_ptr<cognition::FrameCapture> frameCapture;
-		boost::shared_ptr<cognition::FaceRecognizer> faceRecognizer;
+		boost::shared_ptr<cognition::FaceDetector> faceDetector;
 
 		/*typedef boost::shared_ptr<cognition::ControllerForwarder<WebcamWidget> > ControllerForwarderPtr;
 		ControllerForwarderPtr webcamController;*/

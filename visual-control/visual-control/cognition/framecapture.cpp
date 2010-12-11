@@ -23,17 +23,15 @@ namespace cognition
 
 	FrameCapture::~FrameCapture()
 	{
-		
+		//destructor of VideoCapture does not release the webcam feed, call it here!
+		captureDevice->release();		
 	}
 
-	void FrameCapture::startCapturing(bool createNewThread)
+	void FrameCapture::startCapturing()
 	{
 		keepCapturing = true;
 
-		if(createNewThread)
-			boost::thread(boost::bind(&FrameCapture::captureLoop, this));
-		else
-			captureLoop();
+		captureLoop();
 	}
 
 	void FrameCapture::stopCapturing()

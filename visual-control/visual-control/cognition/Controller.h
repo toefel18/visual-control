@@ -3,7 +3,7 @@
 
 namespace cognition
 {
-	class Recognizer;
+	class Detector;
 
 	// interface for controllers
 	// 
@@ -16,7 +16,7 @@ namespace cognition
 	    //their recognizers, (and there is no refcount!)
 	    //supplying a shared ptr will cauze it to delete
 		//the recognizer!
-		virtual void stateChanged(Recognizer *recognizer) = 0;
+		virtual void stateChanged(Detector *recognizer) = 0;
 	};
 
 }

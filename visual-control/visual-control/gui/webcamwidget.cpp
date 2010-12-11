@@ -2,6 +2,7 @@
 #include <QImage>
 #include <QPainter>
 #include <QPen>
+#include <qdebug.h>
 #include <cv.h>
 #include <boost/thread/locks.hpp>
 #include "cognition/framecapture.h"
@@ -15,6 +16,8 @@ namespace gui
 	{
 		if(existingCaptureDevice != 0)
 			existingCaptureDevice->addFrameReceiver(this);
+
+		previousTime = boost::posix_time::microsec_clock::local_time();
 		//frameForwarder = FrameForwarderPtr(
 		//	new cognition::FrameForwarder<WebcamWidget>(this, existingCaptureDevice, true));
 	}
@@ -35,7 +38,7 @@ namespace gui
 		loadNextFrameIntoCurrent();
 
 		facesLock.lock();
-		cognition::Recognizer::RectVector facesDetected = faces; 
+		cognition::Detector::RectVector facesDetected = faces; 
 		facesLock.unlock();
 
 		if(!currentFrame.empty())
@@ -44,10 +47,16 @@ namespace gui
 
 			QPainter painter(this);
 			painter.drawImage(QPoint(0,0), img);
+			
+			QString fps;
+			fps.setNum(detectionFramerate) += " fps";
+
+			//y coordinate is baseline of font!
+			painter.drawText(QPoint(3,15), fps);
 
 			painter.setPen(QPen(Qt::red, 3));
 
-			for(cognition::Recognizer::RectVectorItr i = facesDetected.begin();
+			for(cognition::Detector::RectVectorItr i = facesDetected.begin();
 				i != facesDetected.end(); ++i)
 			{
 				painter.drawRect((*i).x, (*i).y, (*i).width, (*i).height); 
@@ -55,11 +64,25 @@ namespace gui
 		}
 	}
 
-	void WebcamWidget::stateChanged(cognition::Recognizer *recognizer)
+	
+	void WebcamWidget::stateChanged(cognition::Detector *recognizer)
 	{
 		boost::lock_guard<boost::mutex>(this->facesLock);
 
+		//maybe move this outside critical section
+		updateFramerate();
+		
 		faces = recognizer->getAreas();
+	}
+
+	inline void WebcamWidget::updateFramerate()
+	{
+		//http://www.boost.org/doc/libs/1_45_0/doc/html/date_time/posix_time.html
+
+		boost::posix_time::ptime currentTime = boost::posix_time::microsec_clock::local_time();
+		boost::posix_time::time_duration duration = currentTime.time_of_day() - previousTime.time_of_day();
+		detectionFramerate = (1000 / duration.total_milliseconds());
+		previousTime = currentTime;
 	}
 
 	void WebcamWidget::receiveFrame(const cv::Mat &frame)

@@ -8,7 +8,8 @@
 #include "cognition/controller.h"
 //#include "cognition/util.h"
 #include <boost/thread/mutex.hpp>
-#include "cognition/recognizer.h"
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include "cognition/detector.h"
 
 //forward declaration
 namespace cognition{class FrameCapture;}
@@ -38,10 +39,10 @@ namespace gui
 		void receiveFrame(const cv::Mat &frame);
 		
 		//refactor this in another class, this is just for testing!
-		void stateChanged(cognition::Recognizer *recognizer);
+		void stateChanged(cognition::Detector *recognizer);
 
 	protected:
-		cognition::Recognizer::RectVector faces;
+		cognition::Detector::RectVector faces;
 		boost::mutex facesLock;
 
 		cv::Mat currentFrame;
@@ -53,6 +54,12 @@ namespace gui
 		//copies nextFrame to currentFrame, taking concurrency into account
 		virtual void loadNextFrameIntoCurrent();
 		void paintEvent(QPaintEvent* event);
+
+		boost::posix_time::ptime previousTime;
+		//std::time_t previousTime;
+		volatile int detectionFramerate;
+
+		void updateFramerate();
 	};
 
 }

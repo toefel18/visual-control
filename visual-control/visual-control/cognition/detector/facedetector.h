@@ -1,6 +1,6 @@
-#ifndef COGNITION_FACERECOGNIZER_H
-#define COGNITION_FACERECOGNIZER_H
-#include "recognizer.h"
+#ifndef COGNITION_FACEDETECTOR_H
+#define COGNITION_FACEDETECTOR_H
+#include "../detector.h"
 
 #include <boost/thread/mutex.hpp>
 
@@ -8,11 +8,11 @@
 
 namespace cognition
 {
-	// Face recognizer
+	// Face detector
 	// detects a face insida an image
 	// 
 	// @author Christophe hesters
-	class FaceRecognizer : public Recognizer
+	class FaceDetector : public Detector
 	{
 	public:
 
@@ -24,12 +24,12 @@ namespace cognition
 		// @param name					an name for this object
 		// 
 		// @author Christophe hesters
-		FaceRecognizer(const std::string& faceCascadePath, 
+		FaceDetector(const std::string& faceCascadePath, 
 			FrameCapture* captureDevice = 0,
 			bool optimalSubregionDetect = false,
 			double roiScaleFactor = 1.16,
-			const std::string& name = "face recognizer");
-		virtual ~FaceRecognizer(void);
+			const std::string& name = "face detector");
+		virtual ~FaceDetector(void);
 
 		//this will be called by the processing loop! or by the client if the threading system is not used!
 		virtual void processFrame();
@@ -60,4 +60,4 @@ namespace cognition
 	};
 }
 
-#endif //COGNITION_FACERECOGNIZER_H
+#endif //COGNITION_FACEDETECTOR_H

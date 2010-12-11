@@ -14,11 +14,11 @@ namespace cognition
 	class Controller;
 	class FrameCapture;
 
-	// Base class for recognizers
-	// specialize this class and implement processFrame to create a recognizer
+	// Base class for detectors
+	// specialize this class and implement processFrame to create a detector
 	// 
 	// @author Christophe hesters
-	class Recognizer : public FrameReceiver
+	class Detector : public FrameReceiver
 	{
 	public:
 		
@@ -31,10 +31,10 @@ namespace cognition
 		//typedef boost::shared_ptr<Controller> ControllerPtr;
 		typedef Controller* ControllerPtr;
 
-		Recognizer(const std::string& name, FrameCapturePtr captureDevice =0);
-		virtual ~Recognizer(void);
+		Detector(const std::string& name, FrameCapturePtr captureDevice =0);
+		virtual ~Detector(void);
 
-		//recognizers can be given a name for convenience
+		//detector can be given a name for convenience
 		//names should not change during program execution
 		std::string getName() const { return name; }
 		

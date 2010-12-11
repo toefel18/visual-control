@@ -15,10 +15,10 @@ namespace gui
 		setMinimumSize(QSize(640,480));
 
 		frameCaptureThread = boost::thread(
-			boost::bind(&cognition::FrameCapture::startCapturing, frameCapture, false));
+			boost::bind(&cognition::FrameCapture::startCapturing, frameCapture));
 
-		faceRecognizerThread = boost::thread(
-			boost::bind(&cognition::Recognizer::threadStart, faceRecognizer));
+		faceDetectorThread = boost::thread(
+			boost::bind(&cognition::Detector::threadStart, faceDetector));
 	}
 
 	VisualControl::~VisualControl()
@@ -32,31 +32,31 @@ namespace gui
 		frameCapture = shared_ptr<cognition::FrameCapture>( new cognition::FrameCapture(32) );
 
 		//update the path of the classifier to the local path of your openCV installation!
-		faceRecognizer = shared_ptr<cognition::FaceRecognizer>( 
-			new cognition::FaceRecognizer("C:/OpenCV2.1/data/haarcascades/haarcascade_frontalface_alt.xml",
-			frameCapture.get(), false, 1.16));
-		frameCapture->addFrameReceiver(faceRecognizer.get());
+		faceDetector = shared_ptr<cognition::FaceDetector>( 
+			new cognition::FaceDetector("C:/OpenCV2.1/data/haarcascades/haarcascade_frontalface_alt.xml",
+			frameCapture.get(), true, 1.16));
+		frameCapture->addFrameReceiver(faceDetector.get());
 	}
 
 	void VisualControl::closeEvent(QCloseEvent *event)
 	{
 		//webcamController->unregister();
-		faceRecognizer->removeController(webcamWidget);
+		faceDetector->removeController(webcamWidget);
 
-		//qDebug() << "controller count = " << faceRecognizer->getControllerCount();
+		//qDebug() << "controller count = " << faceDetector->getControllerCount();
 
 		frameCapture->stopCapturing();
 
-		faceRecognizer->requestTreadStop();
+		faceDetector->requestTreadStop();
 
 		frameCaptureThread.interrupt();
 
-		faceRecognizerThread.interrupt();
+		faceDetectorThread.interrupt();
 
 	//	qDebug() << "Close event called, joining";
 		frameCaptureThread.join();
 
-		faceRecognizerThread.join();
+		faceDetectorThread.join();
 
 		//event->accept();
 	
@@ -67,7 +67,7 @@ namespace gui
 	{
 		webcamWidget = new WebcamWidget(this, frameCapture.get());
 
-		faceRecognizer->addController(webcamWidget); 
+		faceDetector->addController(webcamWidget); 
 		
 		setCentralWidget(webcamWidget);
 	}
