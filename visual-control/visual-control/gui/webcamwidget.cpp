@@ -37,8 +37,11 @@ namespace gui
 	{
 		loadNextFrameIntoCurrent();
 
+		using cognition::DetailedFaceDetector;
+
 		facesLock.lock();
 		cognition::Detector::RectVector facesDetected = faces; 
+		DetailedFaceDetector::DetailedFaces detailedFacesDetected = detailedFaces;
 		facesLock.unlock();
 
 		if(!currentFrame.empty())
@@ -56,23 +59,53 @@ namespace gui
 
 			painter.setPen(QPen(Qt::red, 3));
 
-			for(cognition::Detector::RectVectorItr i = facesDetected.begin();
-				i != facesDetected.end(); ++i)
+			for(DetailedFaceDetector::DetailedFaces::iterator i = detailedFacesDetected.begin();
+				i != detailedFacesDetected.end(); ++i)
 			{
-				painter.drawRect((*i).x, (*i).y, (*i).width, (*i).height); 
+				//i->first == the face rect
+				//i->second == a map (facepart id) -> (rect)
+
+				//draw the face, stored in the first property of the map pair
+				painter.setPen(QPen(Qt::red, 2));
+				painter.drawRect((i->first).x, (i->first).y, (i->first).width, (i->first).height);
+				
+				//draw the eyes
+				painter.setPen(QPen(Qt::blue, 2));
+				cv::Rect &leftEye = (i->second)[DetailedFaceDetector::LEFT_EYE];
+				painter.drawRect(leftEye.x, leftEye.y, leftEye.width, leftEye.height);
+
+				cv::Rect &rightEye = (i->second)[DetailedFaceDetector::RIGHT_EYE];
+				painter.drawRect(rightEye.x, rightEye.y, rightEye.width, rightEye.height);		
+				
+				//draw the nose
+				painter.setPen(QPen(Qt::green, 2));
+				cv::Rect &nose = (i->second)[DetailedFaceDetector::NOSE];
+				painter.drawRect(nose.x, nose.y, nose.width, nose.height);
+
+				//draw the mouth
+				painter.setPen(QPen(Qt::yellow, 2));
+				cv::Rect &mouth = (i->second)[DetailedFaceDetector::MOUTH];
+				painter.drawRect(mouth.x, mouth.y, mouth.width, mouth.height);
 			}
+
+			//for(cognition::Detector::RectVectorItr i = facesDetected.begin();
+			//	i != facesDetected.end(); ++i)
+			//{
+			//	painter.drawRect((*i).x, (*i).y, (*i).width, (*i).height); 
+			//}
 		}
 	}
 
 	
-	void WebcamWidget::stateChanged(cognition::Detector *recognizer)
+	void WebcamWidget::stateChanged(cognition::Detector *detector)
 	{
 		boost::lock_guard<boost::mutex>(this->facesLock);
 
 		//maybe move this outside critical section
 		updateFramerate();
 		
-		faces = recognizer->getAreas();
+		faces = detector->getAreas();
+		detailedFaces = static_cast<cognition::DetailedFaceDetector *>(detector)->getDetailedFaceInfo();
 	}
 
 	inline void WebcamWidget::updateFramerate()
@@ -81,7 +114,8 @@ namespace gui
 
 		boost::posix_time::ptime currentTime = boost::posix_time::microsec_clock::local_time();
 		boost::posix_time::time_duration duration = currentTime.time_of_day() - previousTime.time_of_day();
-		detectionFramerate = (1000 / duration.total_milliseconds());
+		if(duration.total_milliseconds() != 0)
+			detectionFramerate = (1000 / duration.total_milliseconds());
 		previousTime = currentTime;
 	}
 

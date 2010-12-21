@@ -10,6 +10,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "cognition/detector.h"
+#include "cognition/detector/detailedfacedetector.h"
 
 //forward declaration
 namespace cognition{class FrameCapture;}
@@ -39,10 +40,11 @@ namespace gui
 		void receiveFrame(const cv::Mat &frame);
 		
 		//refactor this in another class, this is just for testing!
-		void stateChanged(cognition::Detector *recognizer);
+		void stateChanged(cognition::Detector *detector);
 
 	protected:
 		cognition::Detector::RectVector faces;
+		cognition::DetailedFaceDetector::DetailedFaces detailedFaces;
 		boost::mutex facesLock;
 
 		cv::Mat currentFrame;

@@ -28,13 +28,21 @@ namespace gui
 	void VisualControl::setupFramework()
 	{
 		using boost::shared_ptr;
+		using cognition::DetailedFaceDetector;
+
 		//videoCapture = shared_ptr<VideoCapture>( new VideoCapture(0) );
 		frameCapture = shared_ptr<cognition::FrameCapture>( new cognition::FrameCapture(32) );
 
 		//update the path of the classifier to the local path of your openCV installation!
-		faceDetector = shared_ptr<cognition::FaceDetector>( 
-			new cognition::FaceDetector("C:/OpenCV2.1/data/haarcascades/haarcascade_frontalface_alt.xml",
-			frameCapture.get(), true, 1.16));
+		faceDetector = shared_ptr<DetailedFaceDetector>( 
+			new DetailedFaceDetector(DetailedFaceDetector::ALL, 
+			"C:/OpenCV2.1/data/haarcascades/haarcascade_frontalface_alt.xml",
+			frameCapture.get(), false, 1.16));
+
+		faceDetector->loadCascade(DetailedFaceDetector::EYES, "C:/OpenCV2.1/data/haarcascades/haarcascade_eye.xml");
+		faceDetector->loadCascade(DetailedFaceDetector::NOSE, "C:/OpenCV2.1/data/haarcascades/haarcascade_mcs_nose.xml");
+		faceDetector->loadCascade(DetailedFaceDetector::MOUTH, "C:/OpenCV2.1/data/haarcascades/haarcascade_mcs_mouth.xml");
+
 		frameCapture->addFrameReceiver(faceDetector.get());
 	}
 

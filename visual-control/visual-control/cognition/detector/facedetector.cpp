@@ -23,18 +23,18 @@ namespace cognition
 
 	void FaceDetector::processFrame()
 	{
-		detectFaces();
-	}
-
-	
-	void FaceDetector::detectFaces()
-	{
-		if(faceClassifier.empty()) return;
-
 		cv::Mat frame = getMostRecentFrame();
 
 		if(frame.empty()) return;
-		
+
+		detectFaces(frame);
+	}
+
+	
+	void FaceDetector::detectFaces(const cv::Mat &frame)
+	{
+		if(faceClassifier.empty()) return;
+				
 		//getAreas is threadsafe
 		RectVector lastRects = getAreas();
 
@@ -45,9 +45,9 @@ namespace cognition
 			{
 				RectVector tempRects;
 
-				runDetect(frame, tempRects);
+				runFaceDetect(frame, tempRects);
 
-				setAreas(tempRects);
+				hasUpdates = setAreas(tempRects);
 			} 
 			else 
 			{
@@ -72,7 +72,7 @@ namespace cognition
 	}
 
 	//more optimal face detection on smaller regions!
-	void FaceDetector::detectFacesInROI(RectVector &lastRects, cv::Mat &frame)
+	void FaceDetector::detectFacesInROI(RectVector &lastRects, const cv::Mat &frame)
 	{
 		RectVector newRects;
 
@@ -98,7 +98,7 @@ namespace cognition
 			roiFrame.adjustROI(adjustFactor*1.10, adjustFactor*1.10, adjustFactor, adjustFactor);
 
 			//detect on smaller frame
-			runDetect(roiFrame, tempRects);
+			runFaceDetect(roiFrame, tempRects);
 
 			//add the results to the newRects vector!
 			for(RectVectorItr iRect = tempRects.begin(); iRect != tempRects.end(); ++iRect)
@@ -111,21 +111,23 @@ namespace cognition
 
 		//if no faces were found, scan the whole image!
 		if(newRects.empty())
-			runDetect(frame, newRects);
+			runFaceDetect(frame, newRects);
 		
 		//update the area 'result' variable
 		setAreas(newRects);
 	}
 
 	//inline function to centralize the parameters!
-	inline void FaceDetector::runDetect(cv::Mat &frame, RectVector &results)
+	inline void FaceDetector::runFaceDetect(const cv::Mat &frame, RectVector &results)
 	{
 		faceClassifier.detectMultiScale(frame, /*the frame, input frame for detection*/
 			results, /*the the result vector, the output*/
-			1.15,  /*the the scale factor, default 1.1*/
-			2,     /*the minNeighbors, default: 3 */
-			cv::CascadeClassifier::DO_CANNY_PRUNING, /*flags*/
-			cv::Size(45, 45) /*min rect check size, the minimum!*/
+			1.13,  /*the the scale factor opencv uses to increase the window each pass, default 1.1*/
+			3,     /*minNeighbors, default: 3 (the min. number of rects to group together to call it a face)*/
+			cv::CascadeClassifier::DO_CANNY_PRUNING, 
+   				/*flags, Canny Prunning runs the canny edge detector to elimiate regions 
+				  which are unlikely to contain faces*/
+			cv::Size(55, 55) /*min rect check size, the minimum!*/
 			);
 	}
 }

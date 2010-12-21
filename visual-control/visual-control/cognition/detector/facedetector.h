@@ -9,9 +9,9 @@
 namespace cognition
 {
 	// Face detector
-	// detects a face insida an image
+	// detects faces inside an image
 	// 
-	// @author Christophe hesters
+	// @author Christophe Hesters
 	class FaceDetector : public Detector
 	{
 	public:
@@ -43,15 +43,15 @@ namespace cognition
 
 		double roiScaleFactor;
 		bool optimalSubregionDetect;
-
+		
 		//calls the HAAR classifier
-		inline void runDetect(cv::Mat &frame, RectVector &results);
+		void runFaceDetect(const cv::Mat &frame, RectVector &results);
 
 		//detects all faces
-		void detectFaces();
+		void detectFaces(const cv::Mat &frame);
 
 		//detects faces in the lastRects areas
-		void detectFacesInROI(RectVector &lastRects, cv::Mat &frame);
+		void detectFacesInROI(RectVector &lastRects, const cv::Mat &frame);
 		
 		//loads a classified, now protected because it needs locks for concurrency control
 		bool loadClassifier(const std::string& faceCascadePath){

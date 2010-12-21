@@ -77,6 +77,9 @@
     <ClCompile Include="cognition\detector\facedetector.cpp">
       <Filter>cognition\detector</Filter>
     </ClCompile>
+    <ClCompile Include="cognition\detector\detailedfacedetector.cpp">
+      <Filter>cognition\detector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cognition\controller.h">
@@ -95,6 +98,9 @@
       <Filter>cognition</Filter>
     </ClInclude>
     <ClInclude Include="cognition\detector\facedetector.h">
+      <Filter>cognition\detector</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\detector\detailedfacedetector.h">
       <Filter>cognition\detector</Filter>
     </ClInclude>
   </ItemGroup>

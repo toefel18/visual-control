@@ -61,13 +61,19 @@ namespace cognition
 		//this will be called by the internal thread loop, if used!
 		virtual void processFrame() = 0;
 
+		//true if the last process frame 
+		bool getHasUpdates(){ return hasUpdates; }
+
 	protected:
 		std::string name;
 
+		//if false, the thread stops
 		bool keepProcessing;
 
-		//create mutex for this
-		//
+		//true if the last processFrame had any updates, false otherwise
+		volatile bool hasUpdates;
+
+		//the set of controllers who want to be explicity notified of each status change
 		typedef std::set< ControllerPtr > ControllerSet;
 		typedef ControllerSet::iterator ControllerSetItr;
 	
@@ -85,9 +91,17 @@ namespace cognition
 		void notifyControllers();
 
 		//update the internal areas
-		void setAreas(const RectVector &areas);
+		bool setAreas(const RectVector &areas);
 
+		//checks if the object automatically notifies the controllers if new area's are set!
+		bool autoNotifying(){ return autoNotify; }
+
+		//if doAutoNotify == true, controllers are notified on 
+		//tAreas, otherwise this has to be done manually
+		void setAutoNotify(bool doAutoNotify){ autoNotify = doAutoNotify; }
+		 
 	private:
+		bool autoNotify;
 		//derived types should no be able to mess with this!
 		//lock used for area variable which can be read/written concurrently
 		boost::mutex areaLock;

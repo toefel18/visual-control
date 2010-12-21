@@ -6,7 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 #include "cognition/framecapture.h"
-#include "cognition/detector/facedetector.h"
+#include "cognition/detector/detailedfacedetector.h"
 #include "cognition/util.h"
 
 namespace gui
@@ -34,10 +34,7 @@ namespace gui
 		//auto_ptr would suffice here too, for our purposes! 
 		boost::shared_ptr<cv::VideoCapture> videoCapture;
 		boost::shared_ptr<cognition::FrameCapture> frameCapture;
-		boost::shared_ptr<cognition::FaceDetector> faceDetector;
-
-		/*typedef boost::shared_ptr<cognition::ControllerForwarder<WebcamWidget> > ControllerForwarderPtr;
-		ControllerForwarderPtr webcamController;*/
+		boost::shared_ptr<cognition::DetailedFaceDetector> faceDetector;
 
 		void closeEvent(QCloseEvent *event);
 

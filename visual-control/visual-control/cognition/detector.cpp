@@ -8,7 +8,7 @@
 namespace cognition
 {
 	Detector::Detector(const std::string& name, FrameCapturePtr captureDevice)
-		:name(name)
+		:name(name), autoNotify(true)
 	{
 		//this can be dangerous, if capture device is the only one that holds a shared_ptr
 		//to this recognizer
@@ -78,21 +78,24 @@ namespace cognition
 	}
 
 	//should usually be called only from the inside, by one 1 thread!
-	void Detector::setAreas(const Detector::RectVector &newAreas)
+	bool Detector::setAreas(const Detector::RectVector &newAreas)
 	{
 		if( areas.size() == newAreas.size() &&
 			std::equal(newAreas.begin(), newAreas.end(), areas.begin()))
 		{
 			//there is nothing new, don't update and notify!
-			return;
+			return false;
 		}
 
 		areaLock.lock();
 		areas = newAreas;
 		areaLock.unlock();
 
-		//areas have changed, send update!
-		notifyControllers();
+		//areas have changed and autoNotify is on, send update!
+		if(autoNotify)
+			notifyControllers();
+
+		return true;
 	}
 
 	void Detector::receiveFrame(const cv::Mat &frame)
