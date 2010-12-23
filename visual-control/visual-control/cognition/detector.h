@@ -14,10 +14,13 @@ namespace cognition
 	class Controller;
 	class FrameCapture;
 
-	// Base class for detectors
-	// specialize this class and implement processFrame to create a detector
-	// 
-	// @author Christophe hesters
+	/*!
+	 * \brief Base class for detectors. Provides threading system and thread safe 
+	 *		  methods for getting the most recent frame, notifying controllers
+	 *		  and getting the detection result.
+	 * 
+	 * \author Christophe Hesters
+	 */
 	class Detector : public FrameReceiver
 	{
 	public:
@@ -31,37 +34,84 @@ namespace cognition
 		//typedef boost::shared_ptr<Controller> ControllerPtr;
 		typedef Controller* ControllerPtr;
 
+		/*!
+		 * \brief Constructs this object with a name and the selected capture device
+		 * 
+		 * \param name			Description of parameter name.
+		 * \param captureDevice	Description of parameter captureDevice.
+		 */
 		Detector(const std::string& name, FrameCapturePtr captureDevice =0);
 		virtual ~Detector(void);
 
-		//detector can be given a name for convenience
-		//names should not change during program execution
+		/*!
+		 * \brief Returns the name of the detector
+		 * 
+		 * \returns the name
+		 */
 		std::string getName() const { return name; }
 		
-		//the rect where the object is last detected!
+		/*!
+		 * \brief Returns the latest detection result (thread-safe)
+		 * 
+		 * \returns the rectangles wherin the detected objects reside
+		 */
 		RectVector getAreas();
 		
-		//create mutex, now contrllers cannot be added when thread is running!
-		//methods for controllers that get notifications about state changes
+		/*!
+		 * \brief Adds the controller to the internal set. It will receive updated status notifications (thread-safe)
+		 *
+		 * \param controller pointer to the controller to receive notifications of this object
+		 * \returns true if added, false on failure or if the controller was already in the set
+		 */
 		bool addController(ControllerPtr controller);
+
+		/*!
+		 * \brief Removes the controller to the internal set. (thread-safe)
+		 *
+		 * \param controller pointer to the controller that needs to be removed
+		 */
 		void removeController(ControllerPtr controller);
+
+		/*!
+		 * \brief Gets the internal controller count
+		 *
+		 * \returns the number of controllers registered
+		 */
 		unsigned getControllerCount(){return controllers.size();}
 
-		//threadstart method if this threading facility is used. 
-		//do not call this method from a normal thread, it will be trapped in a processing loop!
+		/*!
+		 * \brief Starts the internal processing thread. Make sure this method is called
+		 *		  from a new thread as it will be trapped inside a loop until requestThreadStop
+		 *		  is called or an internal error causes it to stop. The internal loop calls
+		 *		  processFrame!
+		 */
 		void threadStart();
 
-		//sets a flag that causes the thread loop to stop, thread can be joined afterwards
+		/*!
+		 * \brief Signals the internal processing thread to stop. It sets the internal
+		 *		  keepProcessing flag to false, which should terminate the internal 
+		 *		  processing loop in a clean way.
+		 */
 		void requestTreadStop();
 
-		//should only update next frame, taking concurrency into account
-		//subclasses who want different behaviour can re-implement this!
+		/*!
+		 * \brief Updates the internal latest frame for processing.(thread-safe)
+		 *
+		 * \param frame the latest frame captured.
+		 */
 		virtual void receiveFrame(const cv::Mat &frame);
 
-		//this will be called by the internal thread loop, if used!
+		/*!
+		 * \brief Template method for implementors. They should call getMostRecentFrame
+		 *		  , check if the returned frame it is not empty and process it. 
+		 */
 		virtual void processFrame() = 0;
 
-		//true if the last process frame 
+		/*!
+		 * \brief Returns true if there are updates.
+		 *
+		 * \returns true if the detector had updates
+		 */
 		bool getHasUpdates(){ return hasUpdates; }
 
 	protected:
@@ -84,20 +134,41 @@ namespace cognition
 		cv::Mat nextFrame;
 		boost::mutex frameLoadLock;
 
-		//copies nextFrame to currentFrame, taking concurrency into account
+		/*!
+		 * \brief Retrieves the most recent frame
+		 *
+		 * \returns a copy of the most recent frame
+		 */
 		cv::Mat getMostRecentFrame();
 
-		//notify all attached controllers about updated areas
+		/*!
+		 * \brief Notifies all the attached controllers about updates
+		 */
 		void notifyControllers();
 
-		//update the internal areas
+		/*!
+		 * \brief Updates the internal detection areas, and checks if they are really different
+		 * 
+		 * \param areas		the new rectangle vector where objects are detected
+		 *
+		 * \returns true if areas was indeed different than the previous state, false if there wasn't a real change
+		 */
 		bool setAreas(const RectVector &areas);
 
-		//checks if the object automatically notifies the controllers if new area's are set!
+		/*!
+		 * \brief Checks if the detector automatically notifies on setAreas
+		 *
+		 * \returns true if it automatically notifies on setAreas, false otherwise
+		 */
 		bool autoNotifying(){ return autoNotify; }
 
-		//if doAutoNotify == true, controllers are notified on 
-		//tAreas, otherwise this has to be done manually
+		/*!
+		 * \brief Sets an internal flag that causes setAreas to send
+		 *		  attached controllers notifications automatically.
+		 *
+		 * \param	doAutoNotify true if it needs to send updates automatically, 
+		 *			false if it wants to this automatically
+		 */
 		void setAutoNotify(bool doAutoNotify){ autoNotify = doAutoNotify; }
 		 
 	private:

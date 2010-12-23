@@ -5,18 +5,26 @@ namespace cognition
 {
 	class Detector;
 
-	// interface for controllers
-	// 
-	// @author Christophe hesters
+	/*!
+	 * \brief
+	 * Interface for objects that want to receive status change notifications from detectors
+	 * 
+	 * Subclass Controller and register the object to a detector. You will then receive updates
+	 * form the detector as they are available.
+	 * 
+	 * \author Christophe Hesters
+	 */
 	class Controller
 	{
 	public:
-		//warning about using shared ptr here!
-		//if someone is not using shared pointers to store
-	    //their recognizers, (and there is no refcount!)
-	    //supplying a shared ptr will cauze it to delete
-		//the recognizer!
-		virtual void stateChanged(Detector *recognizer) = 0;
+	
+		/*!
+		 * \brief
+		 * This method will be called when a detector has an update
+		 * 
+		 * \param detector the detector that has an updated status
+		 */
+		virtual void stateChanged(Detector *detector) = 0;
 	};
 
 }

@@ -6,14 +6,20 @@ namespace cv {class Mat;}
 
 namespace cognition
 {
-	// Interfaces for classes that receive frames!
-	// 
-	// @author Christophe hesters
+	/*!
+	 * \brief Interfaces for classes that receive frames
+	 *
+	 * \author Christophe Hesters
+	 */
 	class FrameReceiver
 	{
 	public:
+		/*!
+		 * \brief implementors receive frames trough this method from FrameCapture
+		 *
+		 * \param frame the new frame
+		 */
 		virtual void receiveFrame(const cv::Mat &frame) = 0;
-		//check if virtual destructor is needed?
 	};
 }
 #endif //FRAMERECEIVER_H

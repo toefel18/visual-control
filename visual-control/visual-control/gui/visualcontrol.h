@@ -13,9 +13,10 @@ namespace gui
 {
 	class WebcamWidget;
 
-	// Main application window
-	// 
-	// @author Christophe hesters
+	/*! \brief Main application window
+	 * 
+	 * \author Christophe hesters
+	 */
 	class VisualControl : public QMainWindow
 	{
 		Q_OBJECT

@@ -18,10 +18,11 @@ namespace cognition{class FrameCapture;}
 namespace gui
 {
 
-	// Widget that displays the webcam feed, provided by a capture devices
-	// it also draws the rectangles it recieves from recognizers!
-	// 
-	// @author Christophe hesters
+	/*! \brief	Widget that displays the webcam feed, provided by a capture devices
+	 *			it also draws the rectangles it recieves from detectors!
+	 * 
+	 * \author Christophe hesters
+	 */
 	class WebcamWidget : public QWidget, 
 		public cognition::FrameReceiver,
 		public cognition::Controller  

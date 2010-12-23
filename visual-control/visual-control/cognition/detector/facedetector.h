@@ -4,26 +4,27 @@
 
 #include <boost/thread/mutex.hpp>
 
-//#include <cv.h> //not needed, included in base interfaces
-
 namespace cognition
 {
-	// Face detector
-	// detects faces inside an image
-	// 
-	// @author Christophe Hesters
+	/*!
+	 * \brief Basic detector that detects faces inside a frame
+	 * 
+	 * \author Christophe Hesters
+	 */
 	class FaceDetector : public Detector
 	{
 	public:
 
-		// Constructor
-		// @param faceCascadePath		the path to the haar cascade xml file, loads the classifier!
-		// @param captureDevice			if 0, nothing else it will register itself as a frame receiver
-		// @param optimalSubregionDetect if true, only scan area's where a face was detected 
-		// @param roiScaleFactor		how far beyond the former face rect should be scanned?
-		// @param name					an name for this object
-		// 
-		// @author Christophe hesters
+		/*! \brief Constructs the Face Detector
+		 * 
+		 * \param faceCascadePath		the path to the haar cascade xml file, loads the classifier!
+		 * \param captureDevice			if 0, nothing else it will register itself as a frame receiver
+		 * \param optimalSubregionDetect if true, only scan area's where a face was detected 
+		 * \param roiScaleFactor		how far beyond the former face rect should be scanned?
+		 * \param name					an name for this object
+		 * 
+		 * @author Christophe hesters
+		 */
 		FaceDetector(const std::string& faceCascadePath, 
 			FrameCapture* captureDevice = 0,
 			bool optimalSubregionDetect = false,
@@ -31,9 +32,16 @@ namespace cognition
 			const std::string& name = "face detector");
 		virtual ~FaceDetector(void);
 
-		//this will be called by the processing loop! or by the client if the threading system is not used!
+		/*!
+		 * \brief Starts the object detection on the latest frame
+		 */
 		virtual void processFrame();
 
+		/*!
+		 * \brief Checks if the internal classifier is empty
+		 * 
+		 * \returns true if the internal faceclassifier is empty.
+		 */
 		bool empty() const { 
 			return faceClassifier.empty(); 
 		}
@@ -44,16 +52,38 @@ namespace cognition
 		double roiScaleFactor;
 		bool optimalSubregionDetect;
 		
-		//calls the HAAR classifier
+		/*!
+		 * \brief Runs the face detection classifier
+		 * 
+		 * \param frame		the frame to detect faces in
+		 * \param results	the vector to store the result rectangles in
+		 */
 		void runFaceDetect(const cv::Mat &frame, RectVector &results);
 
-		//detects all faces
+		/*!
+		 * \brief Detects faces inside the frame. If there were previous results
+		 *		  and optimalSubregionDetect is on, it will automatically call
+		 *		  detectFacesInRoi for more optimal subregion detection.
+		 * 
+		 * \param frame		the frame to detect faces in
+		 */
 		void detectFaces(const cv::Mat &frame);
 
-		//detects faces in the lastRects areas
+		/*!
+		 * \brief Detects faces inside subregions of a frame using the previous
+		 *		  results.
+		 * 
+		 * \param lastRects		the last detection results
+		 * \param frame			the current frame
+		 */
 		void detectFacesInROI(RectVector &lastRects, const cv::Mat &frame);
 		
-		//loads a classified, now protected because it needs locks for concurrency control
+		/*!
+		 * \brief loads the internal classifier. Now protected because it is not thread-safe
+		 *
+		 * \param faceCascadePath	the path to the face cascade xml file
+		 * \returns true on success, false otherwise
+		 */
 		bool loadClassifier(const std::string& faceCascadePath){
 			return faceClassifier.load(faceCascadePath);
 		}
