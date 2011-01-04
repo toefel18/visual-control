@@ -65,6 +65,11 @@ namespace gui
 				//i->first == the face rect
 				//i->second == a map (facepart id) -> (rect)
 
+				//draw the rotation of the face
+				QString rot;
+				rot.setNum(DetailedFaceDetector::getFaceRotation(i->second));
+				painter.drawText(QPoint((i->first).x, (i->first).y), rot);
+
 				//draw the face, stored in the first property of the map pair
 				painter.setPen(QPen(Qt::red, 2));
 				painter.drawRect((i->first).x, (i->first).y, (i->first).width, (i->first).height);

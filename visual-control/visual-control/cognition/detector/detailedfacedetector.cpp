@@ -1,5 +1,6 @@
 #include "detailedfacedetector.h"
 #include <string>
+#include <cmath>
 
 namespace cognition
 {
@@ -243,6 +244,34 @@ namespace cognition
 
 	float DetailedFaceDetector::getFaceRotation(const FaceDetails& faceDetails)
 	{
-		return 0.0f;
+		FaceDetails::const_iterator leftEye = faceDetails.find(LEFT_EYE);
+		FaceDetails::const_iterator rightEye = faceDetails.find(RIGHT_EYE);
+
+		//if there are no eyes, return 0 
+		if(leftEye == faceDetails.end() || rightEye == faceDetails.end())
+			return 0.0f;
+
+		int x1, y1, x2, y2;
+		
+		//calculate the centers of the eyes
+		x1 = leftEye->second.x + (leftEye->second.width / 2);
+		y1 = leftEye->second.y + (leftEye->second.height / 2);
+		x2 = rightEye->second.x + (rightEye->second.width / 2);
+		y2 = rightEye->second.y + (rightEye->second.height / 2);
+
+		//calulcate triangle sides
+		double verticalSide = std::fabs(static_cast<double>(y2) - y1);
+		double horizontalSide = std::fabs(static_cast<double>(x2) - x1);
+		double sheerSide = std::sqrt(std::pow(verticalSide,2.0) + std::pow(horizontalSide, 2.0));
+
+		//calculating PI
+		double PI = std::atan(1.0) * 4; 
+		double ratio = verticalSide / sheerSide;
+
+		//calculate rotation in degrees
+		double rotation = std::asin(ratio) * (180 / PI); 
+
+		//left or right?
+		return (float) (y1 < y2 ? rotation : -1.0 * rotation);
 	}
 }

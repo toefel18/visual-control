@@ -106,10 +106,11 @@ namespace cognition
 
 		/*!
 		 * \brief Searches for the eyes in the FaceDetails structure and 
-		 *		  returns angle. (0 means the face is straight ahead)
+		 *		  returns the angle in degrees. (0 means the face is straight ahead)
+		 *		  a negative value means a rotation left, positive means a rotation right
 		 *
 		 * \param faceDetails	The detailed features of a face
-		 * \returns the angle that describes face rotation
+		 * \returns the angle that describes face rotation, negative is left, positive is right
 		 */
 		static float getFaceRotation(const FaceDetails& faceDetails);
 
