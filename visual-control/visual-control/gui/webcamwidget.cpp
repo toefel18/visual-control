@@ -6,6 +6,7 @@
 #include <cv.h>
 #include <boost/thread/locks.hpp>
 #include "cognition/framecapture.h"
+#include "logger.h"
 
 namespace gui
 {
@@ -20,6 +21,10 @@ namespace gui
 		previousTime = boost::posix_time::microsec_clock::local_time();
 		//frameForwarder = FrameForwarderPtr(
 		//	new cognition::FrameForwarder<WebcamWidget>(this, existingCaptureDevice, true));
+
+		QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+		setSizePolicy(sizePolicy);
+		setMinimumSize(640,480);
 	}
 
 	WebcamWidget::~WebcamWidget()
@@ -67,8 +72,14 @@ namespace gui
 
 				//draw the rotation of the face
 				QString rot;
-				rot.setNum(DetailedFaceDetector::getFaceRotation(i->second));
+				float rotation = DetailedFaceDetector::getFaceRotation(i->second);
+				rot.setNum(rotation);
 				painter.drawText(QPoint((i->first).x, (i->first).y), rot);
+
+				if(rotation > 8.0)
+					Logger::getInstance().log(std::string("Rotation Right detected with angle: ") + rot.toStdString());
+				else if(rotation < -8.0)
+					Logger::getInstance().log(std::string("Rotation Left detected width angle: ") + rot.toStdString());
 
 				//draw the face, stored in the first property of the map pair
 				painter.setPen(QPen(Qt::red, 2));
@@ -135,6 +146,18 @@ namespace gui
 		//update causes a paintEvent, which calls loadNextFrameIntoCurrent
 		//this could cause deadlock
 		update();
+	}
+
+	cv::Mat WebcamWidget::getCurrentFrame()
+	{
+		boost::lock_guard<boost::mutex>(this->frameLoadLock);
+		return currentFrame.clone();
+	}
+
+	cognition::Detector::RectVector WebcamWidget::getCurrentFaces()
+	{
+		boost::lock_guard<boost::mutex>(this->facesLock);
+		return faces;
 	}
 
 	void WebcamWidget::loadNextFrameIntoCurrent()

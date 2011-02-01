@@ -43,6 +43,11 @@ namespace gui
 		//refactor this in another class, this is just for testing!
 		void stateChanged(cognition::Detector *detector);
 
+		
+		//just for convenience!
+		cv::Mat getCurrentFrame();
+		cognition::Detector::RectVector getCurrentFaces();
+
 	protected:
 		cognition::Detector::RectVector faces;
 		cognition::DetailedFaceDetector::DetailedFaces detailedFaces;

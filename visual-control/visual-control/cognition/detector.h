@@ -1,5 +1,5 @@
-#ifndef RECOGNIZER_H
-#define RECOGNIZER_H
+#ifndef COGNITION_DETECTOR_H
+#define COGNITION_DETECTOR_H
 #include <string>
 #include <set>
 #include <vector>
@@ -183,4 +183,4 @@ namespace cognition
 	};
 }
 
-#endif //RECOGNIZER_H
+#endif //COGNITION_DETECTOR_H

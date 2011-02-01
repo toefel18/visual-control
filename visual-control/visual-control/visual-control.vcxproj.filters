@@ -42,6 +42,9 @@
     <Filter Include="cognition\detector">
       <UniqueIdentifier>{e65c84aa-b526-4f0c-867c-c35cce2560db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cognition\recognizer">
+      <UniqueIdentifier>{793ae493-7988-49ce-88de-15e721d1182a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +83,15 @@
     <ClCompile Include="cognition\detector\detailedfacedetector.cpp">
       <Filter>cognition\detector</Filter>
     </ClCompile>
+    <ClCompile Include="cognition\recognizer\eigenfacerecognizer.cpp">
+      <Filter>cognition\recognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cognition\trainerimage.cpp">
+      <Filter>cognition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cognition\controller.h">
@@ -102,6 +114,18 @@
     </ClInclude>
     <ClInclude Include="cognition\detector\detailedfacedetector.h">
       <Filter>cognition\detector</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\recognizer.h">
+      <Filter>cognition</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\recognizer\eigenfacerecognizer.h">
+      <Filter>cognition\recognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cognition\trainerimage.h">
+      <Filter>cognition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

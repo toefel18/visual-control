@@ -95,6 +95,9 @@
   <ItemGroup>
     <ClCompile Include="cognition\detector\detailedfacedetector.cpp" />
     <ClCompile Include="cognition\detector\facedetector.cpp" />
+    <ClCompile Include="cognition\recognizer\eigenfacerecognizer.cpp" />
+    <ClCompile Include="cognition\trainerimage.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GeneratedFiles\qrc_visualcontrol.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -144,7 +147,11 @@
     <ClInclude Include="cognition\framecapture.h" />
     <ClInclude Include="cognition\framereceiver.h" />
     <ClInclude Include="cognition\detector.h" />
+    <ClInclude Include="cognition\recognizer.h" />
+    <ClInclude Include="cognition\recognizer\eigenfacerecognizer.h" />
+    <ClInclude Include="cognition\trainerimage.h" />
     <ClInclude Include="cognition\util.h" />
+    <ClInclude Include="logger.h" />
     <CustomBuild Include="gui\visualcontrol.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Filename)%(Extension)...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp"
