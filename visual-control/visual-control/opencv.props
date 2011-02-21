@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_PropertySheetDisplayName>OpenCV-properties-debug</_PropertySheetDisplayName>
+    <IncludePath>H:\OpenCV-2.1.0\include\opencv;$(IncludePath)</IncludePath>
+    <LibraryPath>H:\OpenCV-2.1.0\build\lib\Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>cv210d.lib;highgui210d.lib;cxcore210d.lib;cvaux210d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
